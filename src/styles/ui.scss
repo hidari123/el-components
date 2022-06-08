@@ -1,0 +1,20 @@
+/*
+ * @Author: hidari
+ * @Date: 2022-06-08 14:11:59
+ * @LastEditors: hidari
+ * @LastEditTime: 2022-06-08 15:05:19
+ * @FilePath: \el-components\src\styles\ui.scss
+ * @Description: 修改组件库内部样式
+ */
+
+// 自定义一个类名空间
+// 先在浏览器中调试样式
+// 把调试好的类名放在这个类名里面
+// 在 APP.vue 中引入这个文件
+// 在组件内需要该样式的元素的父元素加上这个类名
+.choose-icon-dialog-body-height {
+    .el-dialog__body {
+        height: 500px !important;
+        overflow: scroll !important;
+    }
+}

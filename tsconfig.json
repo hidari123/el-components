@@ -12,6 +12,7 @@
 		"lib": ["esnext", "dom", "es2015"],
 		"baseUrl": ".",
 		"paths": {
+			"@/*": ["src/*"],
 			"@/components/*": ["src/components/*"],
 			"@/services/*": ["src/services/*"],
 			"@/utils/*": ["src/utils/*"],

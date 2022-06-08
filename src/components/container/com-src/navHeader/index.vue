@@ -2,8 +2,8 @@
  * @Author: hidari
  * @Date: 2022-06-08 10:07:29
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-08 11:34:47
- * @FilePath: \el-components\src\components\container\src\navHeader\index.vue
+ * @LastEditTime: 2022-06-08 14:54:58
+ * @FilePath: \el-components\src\components\container\com-src\navHeader\index.vue
  * @Description: 头部 nav
  * 
  * Copyright (c) 2022 by lijiaying 1640106564@qq.com, All Rights Reserved. 
@@ -11,16 +11,16 @@
 <template>
   <div class="header">
     <span @click="toggle">
-      <el-icon-expand class="icon" style="" v-if="collapse"></el-icon-expand>
-      <el-icon-fold class="icon" v-else></el-icon-fold>
+      <el-icon-expand style="" v-if="collapse"></el-icon-expand>
+      <el-icon-fold v-else></el-icon-fold>
     </span>
   </div>
 </template>
 
 <script lang="ts" setup>
 const props = defineProps<{
-  collapse: boolean;
-}>();
+    collapse: boolean;
+}>()
 let emits = defineEmits(["update:collapse"]);
 let toggle = () => {
   // 需要修改父组件的值
@@ -33,8 +33,5 @@ let toggle = () => {
   padding: 0 20px;
   display: flex;
   align-items: center;
-}
-.icon {
-    width: 1em; height: 1em;
 }
 </style>

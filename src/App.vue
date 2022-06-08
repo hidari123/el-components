@@ -2,7 +2,7 @@
  * @Author: hidari
  * @Date: 2022-06-07 16:04:22
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-08 09:41:00
+ * @LastEditTime: 2022-06-08 14:53:47
  * @FilePath: \el-components\src\App.vue
  * @Description: 主入口路由
  * 
@@ -16,5 +16,6 @@
 <script setup lang="ts">
 </script>
 <style lang="scss">
-
+@import './styles/ui.scss';
+@import './styles/base.scss';
 </style>

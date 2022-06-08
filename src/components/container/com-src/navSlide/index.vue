@@ -2,8 +2,8 @@
  * @Author: hidari
  * @Date: 2022-06-08 10:07:26
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-08 11:34:25
- * @FilePath: \el-components\src\components\container\src\navSlide\index.vue
+ * @LastEditTime: 2022-06-08 14:55:08
+ * @FilePath: \el-components\src\components\container\com-src\navSlide\index.vue
  * @Description: 侧边导航菜单
  * 
  * Copyright (c) 2022 by lijiaying 1640106564@qq.com, All Rights Reserved. 
@@ -19,7 +19,7 @@
        class="el-menu-vertical-demo"
        :collapse="collapse">
       <el-menu-item v-for="(item,index) in data" :index="index" :key="index">
-          <el-icon-menu class="icon" />
+          <el-icon-menu/>
           <span>{{item.name}}</span>
       </el-menu-item>
   </el-menu>
@@ -101,8 +101,5 @@ let data = [
 <style lang="scss">
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
-}
-.icon {
-    width: 1em; height: 1em;
 }
 </style>
