@@ -2,7 +2,7 @@
  * @Author: hidari
  * @Date: 2022-06-07 16:04:22
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-08 11:10:29
+ * @LastEditTime: 2022-06-08 17:59:09
  * @FilePath: \el-components\src\main.ts
  * @Description: main 主入口文件
  * 
@@ -15,6 +15,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as Icons from '@element-plus/icons-vue'
 import { toLine } from './utils'
+import UI from './components'
 
 const app = createApp(App)
 
@@ -25,7 +26,5 @@ for(let i in Icons) {
     // 注册全局组件(横线连接)
     app.component(`el-icon-${toLine(i)}`, (Icons as any)[i])
 }
-app.use(router)
-app.use(ElementPlus)
-
+app.use(router).use(ElementPlus).use(UI)
 app.mount('#app')

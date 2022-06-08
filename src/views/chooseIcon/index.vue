@@ -2,7 +2,7 @@
  * @Author: hidari
  * @Date: 2022-06-08 12:47:57
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-08 14:14:40
+ * @LastEditTime: 2022-06-08 17:58:15
  * @FilePath: \el-components\src\views\chooseIcon\index.vue
  * @Description: 
  * 
@@ -17,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import ChooseIcon from '../../components/chooseIcon/com-src/index.vue'
 import { ref } from 'vue'
 
 let visible = ref<boolean>(false)
