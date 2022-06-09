@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [基于 Vue 3 + TypeScript + Vite 的二次封装 element-plus](#%E5%9F%BA%E4%BA%8E-vue-3--typescript--vite-%E7%9A%84%E4%BA%8C%E6%AC%A1%E5%B0%81%E8%A3%85-element-plus)
+  - [图标选择器](#%E5%9B%BE%E6%A0%87%E9%80%89%E6%8B%A9%E5%99%A8)
+  - [省市区选择器](#%E7%9C%81%E5%B8%82%E5%8C%BA%E9%80%89%E6%8B%A9%E5%99%A8)
+    - [全局注册组件](#%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C%E7%BB%84%E4%BB%B6)
+  - [时间选择器](#%E6%97%B6%E9%97%B4%E9%80%89%E6%8B%A9%E5%99%A8)
+  - [趋势标记](#%E8%B6%8B%E5%8A%BF%E6%A0%87%E8%AE%B0)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <!--
  * @Author: hidari
  * @Date: 2022-06-07 16:04:22
@@ -10,11 +23,9 @@
 -->
 # 基于 Vue 3 + TypeScript + Vite 的二次封装 element-plus
 
-## 本项目封装的组件有
+## 图标选择器
 
-### 图标选择器
-
-#### 全局注册图标为`-`连接形式
+1. 全局注册图标为`-`连接形式
 
 `\src\utils\index.ts`
 ```ts
@@ -42,7 +53,7 @@ for(let i in Icons) {
 app.use(ElementPlus)
 ```
 
-#### 封装图标选择器组件
+2. 封装图标选择器组件
 
 `\src\views\chooseIcon\index.vue`
 ```vue
@@ -188,7 +199,7 @@ svg {
 ```
 
 
-### 省市区选择器
+## 省市区选择器
 
 `\src\views\chooseArea\index.vue`
 ```vue
@@ -311,7 +322,7 @@ watch(() => area.value, (val) => {
 </style>
 ```
 
-#### 全局注册组件
+### 全局注册组件
 
 - 注册全局组件`app.component(‘组件名’， 组件对象)`
 `\src\components\chooseArea\index.ts`
@@ -387,7 +398,7 @@ import UI from './components'
 app.use(UI)
 ```
 
-3. 时间选择器
+## 时间选择器
 
 4. 日期选择器
 
@@ -399,7 +410,123 @@ app.use(UI)
 
 8. 导航菜单
 
-9. 趋势标记
+## 趋势标记
+
+```vue
+<template>
+  <div class="flex">
+      <trend reverseColor="true" text="营业额"></trend>
+      <trend reverseColor="true" text="销售额" type="down"/>
+  </div>
+</template>
+
+<script setup lang="ts">
+</script>
+<style lang="scss">
+.flex {
+    display: flex;
+    align-items: center;
+    > div {
+        margin-right: 10px;
+    }
+}
+</style>
+```
+
+```vue
+<template>
+  <div class="trend">
+    <!-- 如果有插槽显示插槽，没有插槽显示文本 -->
+    <slot v-if="$slots.default" :style="{ color: type === 'up' ? upTextColor : downTextColor }"  />
+    <div
+     class="text"
+     :style="{ color: type === 'up' ? upTextColor : downTextColor }" 
+     v-else>{{text}}</div>
+    <!-- 动态渲染图标 -->
+    <div class="icon">
+      <component
+       :is="`el-icon-${toLine(upIcon)}`"
+       :style="{ color: !reverseColor ? upIconColor : '#52c41a' }"
+       v-if="type === 'up'"
+       ></component>
+      <component
+       :is="`el-icon-${toLine(downIcon)}`"
+       :style="{ color: !reverseColor ? downIconColor : '#f5222d' }"
+       v-else
+       ></component>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { toLine } from "@/utils"
+const props = defineProps({
+    // 标记趋势是上升还是下降
+    type: {
+        type: String,
+        default: 'up'
+    },
+    // 趋势显示的文字
+    // 1. 父组件传递的数据
+    // 2. 插槽
+    text: {
+        type: String,
+        default: '文字'
+    },
+    // 颜色翻转，只在默认的颜色下生效没如果使用了自定义颜色，这个属性就不生效了
+    reverseColor: {
+        type: Boolean,
+        default: false,
+    },
+    // 上升趋势图标
+    upIcon: {
+        type: String,
+        default: "ArrowUp",
+    },
+    // 下降趋势图标
+    downIcon: {
+        type: String,
+        default: "ArrowDown",
+    },
+    // 上升趋势图标颜色
+    upIconColor: {
+        type: String,
+        default: "#f5222d",
+    },
+    // 下降趋势图标颜色
+    downIconColor: {
+        type: String,
+        default: "#52c41a",
+    },
+    // 上升趋势文字颜色
+    upTextColor: {
+        type: String,
+        default: "#000",
+    },
+    // 下降趋势文字颜色
+    downTextColor: {
+        type: String,
+        default: "#000",
+    }
+})
+</script>
+<style lang="scss" scoped>
+.trend {
+  display: flex;
+  align-items: center;
+  .text {
+    font-size: 12px;
+    mask-repeat: 4px;
+  }
+  .icon {
+    svg {
+      width: 0.8em;
+      height: 0.8em;
+    }
+  }
+}
+</style>
+```
 
 10. 动态进度条
 

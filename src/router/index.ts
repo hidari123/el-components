@@ -2,7 +2,7 @@
  * @Author: hidari
  * @Date: 2022-06-07 16:11:59
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-08 16:47:43
+ * @LastEditTime: 2022-06-09 10:02:58
  * @FilePath: \el-components\src\router\index.ts
  * @Description: router 入口文件
  */
@@ -24,6 +24,10 @@ const routes: RouteRecordRaw[] = [
             {
                 path: '/choosearea',
                 component: () => import('@/views/chooseArea/index.vue')
+            },
+            {
+                path: '/trend',
+                component: () => import('@/views/trend/index.vue')
             }
         ]
     }
