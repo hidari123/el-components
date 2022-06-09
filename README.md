@@ -7,6 +7,9 @@
   - [省市区选择器](#%E7%9C%81%E5%B8%82%E5%8C%BA%E9%80%89%E6%8B%A9%E5%99%A8)
     - [全局注册组件](#%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C%E7%BB%84%E4%BB%B6)
   - [时间选择器](#%E6%97%B6%E9%97%B4%E9%80%89%E6%8B%A9%E5%99%A8)
+  - [通知菜单](#%E9%80%9A%E7%9F%A5%E8%8F%9C%E5%8D%95)
+    - [通知菜单组件](#%E9%80%9A%E7%9F%A5%E8%8F%9C%E5%8D%95%E7%BB%84%E4%BB%B6)
+    - [列表组件](#%E5%88%97%E8%A1%A8%E7%BB%84%E4%BB%B6)
   - [趋势标记](#%E8%B6%8B%E5%8A%BF%E6%A0%87%E8%AE%B0)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -404,7 +407,328 @@ app.use(UI)
 
 5. 城市选择器
 
-6. 通知菜单
+## 通知菜单
+
+### 通知菜单组件
+
+- 使用`element-plus`的插槽中嵌套插槽的方式自定义输入内容组件`\src\components\notification\com-src\index.vue`
+```vue
+<template>
+  <el-popover
+    placement="bottom"
+    :width="300"
+    trigger="click"
+  >
+    <template #default>
+        <slot></slot>
+    </template>
+    <template #reference>
+      <el-badge style="cursor: pointer" :value="value" :max="max" :is-dot="isDot">
+        <component :is="`el-icon-${toLine(icon)}`" />
+      </el-badge>
+    </template>
+  </el-popover>
+</template>
+
+<script setup lang="ts">
+import { toLine } from "@/utils"
+
+const props = defineProps({
+  // 显示的图标
+  icon: {
+    type: String,
+    default: "Bell",
+  },
+  // 通知数量
+  value: {
+    type: [String, Number],
+    default: "",
+  },
+  // 最大值
+  max: {
+    type: Number,
+  },
+  // 是否显示小圆点
+  isDot: {
+    type: Boolean,
+    default: false,
+  },
+})
+</script>
+```
+
+### 列表组件
+
+1. 定义列表数据`\src\views\notification\data.ts`
+```ts
+export const lists = [
+  {
+    title: '通知',
+    content: [
+      {
+        title: '蒂姆·库克回复了你的邮件',
+        time: '2019-05-08 14:33:18',
+        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png'
+      },
+      {
+        title: '乔纳森·伊夫邀请你参加会议',
+        time: '2019-05-08 14:33:18',
+        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png'
+      },
+      {
+        title: '斯蒂夫·沃兹尼亚克已批准了你的休假申请',
+        time: '2019-05-08 14:33:18',
+        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png'
+      }
+    ],
+  },
+  {
+    title: '关注',
+    content: [
+      {
+        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
+        title: '曲丽丽 评论了你',
+        desc: '描述信息描述信息描述信息',
+        time: '3小时前'
+      },
+      {
+        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
+        title: '曲丽丽 评论了你',
+        desc: '描述信息描述信息描述信息',
+        time: '3小时前'
+      },
+      {
+        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/fcHMVNCjPOsbUGdEduuv.jpeg',
+        title: '曲丽丽 评论了你',
+        desc: '描述信息描述信息描述信息',
+        time: '3小时前'
+      }
+    ]
+  },
+  {
+    title: '代办',
+    content: [
+      {
+        title: '任务名称',
+        desc: '任务需要在 2017-01-12 20:00 前启动',
+        tag: '未开始',
+        tagType: ''
+      },
+      {
+        title: '第三方紧急代码变更',
+        desc: '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
+        tag: '马上到期',
+        tagType: 'danger'
+      },
+      {
+        title: '信息安全考试',
+        desc: '指派竹尔于 2017-01-09 前完成更新并发布',
+        tag: '已耗时8天',
+        tagType: 'warning'
+      }
+    ]
+  },
+]
+export const actions = [
+  {
+    text: '清空代办',
+    icon: 'delete'
+  },
+  {
+    text: '查看更多',
+    icon: 'edit'
+  },
+]
+```
+
+2. 传递数据`\src\views\notification\index.vue`
+```vue
+<template>
+  <notification :value="50">
+    <list 
+     :list="lists"
+     :actions="actions"
+     @clickItem="clickItem"
+     @clickAction="clickAction"
+    ></list>
+  </notification>
+</template>
+
+<script setup lang="ts">
+import { lists, actions } from "./data"
+const clickItem = (data: any) => {
+  console.log(data)
+};
+const clickAction = (data: any) => {
+  console.log(data)
+};
+</script>
+```
+
+3. 定义列表组件使用到的接口类型`\src\components\list\com-src\type.ts`
+```ts
+/**
+ * 列表的每一项
+ */
+export interface ListItem {
+	// 头像
+	avatar?: string
+	// 标题
+	title?: string
+	// 描述
+	desc?: string
+	// 时间
+	time?: string
+	// 标签内容
+	tag?: string
+	// 标签类型
+	tagType?: '' | 'success' | 'info' | 'waring' | 'danger'
+}
+
+/**
+ * 列表
+ */
+export interface ListOptions {
+	title: string
+	content: ListItem[]
+}
+
+/**
+ * 操作选项
+ */
+export interface ActionOptions {
+	text: string
+	icon?: string
+}
+```
+
+4. 定义列表组件
+```vue
+<template>
+	<div class="list-tabs__item">
+		<el-tabs>
+			<el-tab-pane        
+				v-for="(item, index) in list"
+				:key="index"
+				:label="item.title"
+			>
+				<el-scrollbar max-height="300px">
+					<div
+					class="container"
+					v-for="(item1,index1) in item.content"
+					:key="index1"
+					@click="clickItem(item1, index1)"
+					>
+						<div class="avatar" v-if="item1.avatar">
+							<el-avatar size="small" :src="item1.avatar"></el-avatar>
+						</div>
+            <div class="content">
+              <div v-if="item1.title" class="title">
+                <div>{{ item1.title }}</div>
+                <el-tag :tag="item1.tagType" v-if="item1.tagType">{{
+                  item1.tag
+                }}</el-tag>
+              </div>
+              <div v-if="item1.desc">{{ item1.desc }}</div>
+              <div v-if="item1.time">{{ item1.time }}</div>
+            </div>
+					</div>
+          <div class="actions">
+            <div
+              class="a-item"
+              :class="{ border: i !== actions.length - 1 }"
+              v-for="(action, i) in actions"
+              :key="i"
+			  @click="clickAction(action, i)"
+            >
+              <div class="a-icon" v-if="action.icon">
+                <component :is="`el-icon-${toLine(action.icon)}`" />
+              </div>
+              <div class="a-text">{{ action.text }}</div>
+            </div>
+          </div>
+				</el-scrollbar>
+			</el-tab-pane>
+		</el-tabs>
+	</div>
+</template>
+
+<script setup lang="ts">
+import { PropType } from "vue"
+import { toLine } from "../../../utils"
+import { ListOptions, ActionOptions, ListItem } from "./type"
+const props = defineProps({
+  // 列表的内容
+  list: {
+    type: Array as PropType<ListOptions[]>,
+    required: true,
+  },
+  // 操作的内容
+  actions: {
+    type: Array as PropType<ActionOptions[]>,
+    default: () => [],
+  },
+})
+
+const emits = defineEmits(["clickItem", "clickAction"])
+const clickItem = (item: ListItem, index: Number) => {
+  emits("clickItem", { item, index })
+}
+
+const clickAction = (item: ActionOptions, index: Number) => {
+  emits("clickAction", { item, index })
+}
+</script>
+<style lang="scss" scoped>
+.container {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  cursor: pointer;
+  &:hover {
+    background: #e6f6ff;
+  }
+  .avatar {
+    flex: 1;
+  }
+  .content {
+    flex: 3;
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .time {
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+    }
+  }
+}
+.actions {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #eee;
+  .a-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    .a-icon {
+      margin-right: 4px;
+      position: relative;
+      top: 2px;
+    }
+  }
+}
+.border {
+  border-right: 1px solid #eee;
+}
+</style>
+```
+
 
 7. 伸缩菜单
 

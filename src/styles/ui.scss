@@ -2,7 +2,7 @@
  * @Author: hidari
  * @Date: 2022-06-08 14:11:59
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-08 15:05:19
+ * @LastEditTime: 2022-06-09 15:24:55
  * @FilePath: \el-components\src\styles\ui.scss
  * @Description: 修改组件库内部样式
  */
@@ -18,3 +18,15 @@
         overflow: scroll !important;
     }
 }
+
+.list-tabs__item {
+
+    .el-tabs__nav {
+      width: 100%;
+      display: flex;
+    }
+    .el-tabs__item {
+      flex: 1;
+      text-align: center;
+    }
+  } 

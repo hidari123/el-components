@@ -2,7 +2,7 @@
  * @Author: hidari
  * @Date: 2022-06-08 17:52:03
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-09 10:02:27
+ * @LastEditTime: 2022-06-09 15:00:53
  * @FilePath: \el-components\src\components\index.ts
  * @Description: app.use 全局注册组件入口
  * 
@@ -11,12 +11,16 @@
 import { App } from 'vue'
 import chooseArea from './chooseArea'
 import chooseIcon from './chooseIcon'
+import list from './list'
+import notification from './notification'
 import trend from './trend'
 
 const component = [
     chooseArea,
     chooseIcon,
-    trend
+    trend,
+    notification,
+    list
 ]
 
 export default {
