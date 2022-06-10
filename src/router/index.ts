@@ -2,7 +2,7 @@
  * @Author: hidari
  * @Date: 2022-06-07 16:11:59
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-10 15:12:55
+ * @LastEditTime: 2022-06-10 15:45:41
  * @FilePath: \el-components\src\router\index.ts
  * @Description: router 入口文件
  */
@@ -36,6 +36,10 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '/menu',
 				component: () => import('@/views/menu/index.vue')
+			},
+			{
+				path: '/progress',
+				component: () => import('@/views/progress/index.vue')
 			}
 		]
 	}

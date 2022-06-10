@@ -2,7 +2,7 @@
  * @Author: hidari
  * @Date: 2022-06-08 14:11:59
  * @LastEditors: hidari
- * @LastEditTime: 2022-06-09 15:24:55
+ * @LastEditTime: 2022-06-10 16:19:30
  * @FilePath: \el-components\src\styles\ui.scss
  * @Description: 修改组件库内部样式
  */
@@ -13,20 +13,27 @@
 // 在 APP.vue 中引入这个文件
 // 在组件内需要该样式的元素的父元素加上这个类名
 .choose-icon-dialog-body-height {
-    .el-dialog__body {
-        height: 500px !important;
-        overflow: scroll !important;
-    }
+	.el-dialog__body {
+		height: 500px !important;
+		overflow: scroll !important;
+	}
 }
 
 .list-tabs__item {
+	.el-tabs__nav {
+		width: 100%;
+		display: flex;
+	}
+	.el-tabs__item {
+		flex: 1;
+		text-align: center;
+	}
+} 
 
-    .el-tabs__nav {
-      width: 100%;
-      display: flex;
-    }
-    .el-tabs__item {
-      flex: 1;
-      text-align: center;
-    }
-  } 
+.progress-wrap {
+	width: 300px;
+	.el-progress .el-progress-circle svg {
+		width: 8em !important;
+		height: 8em !important;
+	}
+}

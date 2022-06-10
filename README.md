@@ -7,6 +7,8 @@
   - [省市区选择器](#%E7%9C%81%E5%B8%82%E5%8C%BA%E9%80%89%E6%8B%A9%E5%99%A8)
     - [全局注册组件](#%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C%E7%BB%84%E4%BB%B6)
   - [时间选择器](#%E6%97%B6%E9%97%B4%E9%80%89%E6%8B%A9%E5%99%A8)
+  - [日期选择器](#%E6%97%A5%E6%9C%9F%E9%80%89%E6%8B%A9%E5%99%A8)
+  - [城市选择器](#%E5%9F%8E%E5%B8%82%E9%80%89%E6%8B%A9%E5%99%A8)
   - [通知菜单](#%E9%80%9A%E7%9F%A5%E8%8F%9C%E5%8D%95)
     - [通知菜单组件](#%E9%80%9A%E7%9F%A5%E8%8F%9C%E5%8D%95%E7%BB%84%E4%BB%B6)
     - [列表组件](#%E5%88%97%E8%A1%A8%E7%BB%84%E4%BB%B6)
@@ -413,9 +415,9 @@ app.use(UI)
 
 ## 时间选择器
 
-4. 日期选择器
+## 日期选择器
 
-5. 城市选择器
+## 城市选择器
 
 ## 通知菜单
 
@@ -1193,6 +1195,83 @@ const props = defineProps({
 ```
 
 ## 动态进度条
+
+- 设置定时器，每隔固定时间改变进度条进度，直到达到想要的进度
+- `v-bind="$attrs"` 可以接收所有父组件传递来的没有用`props`接收的数据
+`src\components\progress\com-src\index.vue`
+```vue
+<template>
+  <div class="progress-wrap">
+    <el-progress v-bind="$attrs"
+                 :percentage="p" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
+const props = defineProps({
+  // 进度条进度
+  percentage: {
+    type: Number,
+    default: 0,
+  },
+  // 进度条是否有动画效果
+  isAnimation: {
+    type: Boolean,
+    default: false,
+  },
+  // 动画时长（毫秒）
+  time: {
+    type: Number,
+    default: 1000,
+  },
+})
+const p = ref(0)
+onMounted(() => {
+  // 动画效果
+  if (props.isAnimation) {
+    // 规定时间内加载完成
+    // t: 每隔多久需要加载一次进度条
+    const t = Math.ceil(props.time / props.percentage)
+    let timer = setInterval(() => {
+      p.value += 1
+      // 如果达到目标进度 停止 清空定时器
+      if (p.value >= props.percentage) {
+        p.value = props.percentage
+        clearInterval(timer)
+      }
+    }, t)
+  } else {
+    p.value = props.percentage
+  }
+})
+</script>
+```
+
+2. 使用组件
+`src\views\progress\index.vue`
+```vue
+<template>
+  <Progress :percentage="60"
+            isAnimation />
+  <Progress :percentage="70"
+            type="circle"
+            isAnimation />
+</template>
+```
+
+3. 修改样式
+`src\styles\ui.scss`
+```scss
+.progress-wrap {
+	width: 300px;
+	.el-progress .el-progress-circle svg {
+		width: 8em !important;
+		height: 8em !important;
+	}
+}
+```
 
 ## 列表 
 
