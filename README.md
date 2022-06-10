@@ -10,7 +10,17 @@
   - [通知菜单](#%E9%80%9A%E7%9F%A5%E8%8F%9C%E5%8D%95)
     - [通知菜单组件](#%E9%80%9A%E7%9F%A5%E8%8F%9C%E5%8D%95%E7%BB%84%E4%BB%B6)
     - [列表组件](#%E5%88%97%E8%A1%A8%E7%BB%84%E4%BB%B6)
+  - [伸缩菜单](#%E4%BC%B8%E7%BC%A9%E8%8F%9C%E5%8D%95)
+  - [导航菜单](#%E5%AF%BC%E8%88%AA%E8%8F%9C%E5%8D%95)
+    - [普通导航菜单](#%E6%99%AE%E9%80%9A%E5%AF%BC%E8%88%AA%E8%8F%9C%E5%8D%95)
+    - [无限层级菜单](#%E6%97%A0%E9%99%90%E5%B1%82%E7%BA%A7%E8%8F%9C%E5%8D%95)
   - [趋势标记](#%E8%B6%8B%E5%8A%BF%E6%A0%87%E8%AE%B0)
+  - [动态进度条](#%E5%8A%A8%E6%80%81%E8%BF%9B%E5%BA%A6%E6%9D%A1)
+  - [列表](#%E5%88%97%E8%A1%A8)
+  - [表格](#%E8%A1%A8%E6%A0%BC)
+  - [表单](#%E8%A1%A8%E5%8D%95)
+  - [弹窗表单](#%E5%BC%B9%E7%AA%97%E8%A1%A8%E5%8D%95)
+  - [日历](#%E6%97%A5%E5%8E%86)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -730,9 +740,339 @@ const clickAction = (item: ActionOptions, index: Number) => {
 ```
 
 
-7. 伸缩菜单
+## 伸缩菜单
 
-8. 导航菜单
+## 导航菜单
+
+### 普通导航菜单
+
+- 使用变量方式获取数据，防止传递来的数据格式不一致
+
+1. 定义数据
+```ts
+const data1 = [
+  {
+    a: '导航1',
+    b: '1',
+    c: 'document',
+  },
+  {
+    a: '导航2',
+    b: '2',
+    c: 'document',
+  },
+  {
+    a: '导航3',
+    b: '3',
+    c: 'document',
+    d: [
+      {
+        a: '导航3-1',
+        b: '4',
+        c: 'document',
+      },
+    ],
+  },
+]
+```
+
+2. 封装组件
+
+```vue
+<template>
+  <!-- v-bind="$attrs" 接收父组件传递来的数据 并且数据没有在 props 声明 -->
+  <el-menu :default-active="defaultActive"
+           :router="router"
+           v-bind="$attrs">
+    <!-- 要用 template 包裹 template 不会渲染 如果改成 div 样式会变化 -->
+    <template v-for="(item,i) in data"
+              :key="i">
+      <!-- 一级菜单 -->
+      <el-menu-item v-if="!item[children] || !item[children].length"
+                    :index="item[index]">
+        <component v-if="item[icon]"
+                   :is="`el-icon-${toLine(item[icon])}`"></component>
+        <span>{{item[name]}}</span>
+      </el-menu-item>
+      <!-- 二级菜单 -->
+      <el-sub-menu v-if="item[children] && item[children].length"
+                   :index="item[index]">
+        <template #title>
+          <component v-if="item[icon]"
+                     :is="`el-icon-${toLine(item[icon])}`"></component>
+          <span>{{ item[name] }}</span>
+        </template>
+        <el-menu-item v-for="(item1,index1) in item[children]"
+                      :key="index1"
+                      :index="item1[index]">
+          <component v-if="item1[icon]"
+                     :is="`el-icon-${toLine(item1[icon])}`"></component>
+          <span>{{item1[name]}}</span>
+        </el-menu-item>
+      </el-sub-menu>
+    </template>
+  </el-menu>
+</template>
+
+<script setup lang="ts">
+import { toLine } from '@/utils'
+import { PropType } from 'vue'
+const props = defineProps({
+  // 导航菜单的数据
+  data: {
+    type: Array as PropType<any[]>,
+    required: true,
+  },
+  // 默认选中的菜单
+  defaultActive: {
+    type: String,
+    default: '',
+  },
+  // 是否是路由模式
+  router: {
+    type: Boolean,
+    default: false,
+  },
+  // 键名 -> 菜单标题的键名
+  name: {
+    type: String,
+    default: 'name',
+  },
+  // 键名 -> 菜单表示的键名
+  index: {
+    type: String,
+    default: 'index',
+  },
+  // 键名 -> 菜单图标的键名
+  icon: {
+    type: String,
+    default: 'icon',
+  },
+  // 键名 -> 子菜单的键名
+  children: {
+    type: String,
+    default: 'children',
+  },
+})
+</script>
+<style lang="scss" scoped>
+svg {
+  margin-right: 10px;
+}
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+}
+</style>
+```
+
+3. 使用组件
+```html
+<template>
+    <Menu :data="data1"
+          name="a"
+          index="b"
+          icon="c"
+          children="d"></Menu>
+</template>
+```
+
+4. 更改左侧菜单
+
+```vue
+<template>
+  <Menu :data="data"
+        router
+        :defaultActive="$route.path"
+        :collapse="collapse"
+        class="el-menu-vertical-demo"></Menu>
+</template>
+```
+
+5. 定义接口类型（本项目采用变量方式传递数据不需要）
+
+```ts
+export interface MenuItem {
+    // 导航的图标
+    icon?: string
+    // 处理后的图标
+    i?: any
+    // 导航的名字
+    name: string
+    // 导航的标识
+    index: string
+    // 导航的子菜单
+    children?: MenuItem[]
+  }
+```
+
+### 无限层级菜单
+
+1. 定义数据
+
+```ts
+const data2 = [
+  {
+    a: '导航1',
+    b: '1',
+    c: 'Document',
+  },
+  {
+    a: '导航2',
+    b: '2',
+    c: 'Document',
+  },
+  {
+    a: '导航3',
+    b: '3',
+    c: 'Document',
+    d: [
+      {
+        a: '导航3-1',
+        b: '4',
+        c: 'Document',
+        d: [
+          {
+            a: '导航3-1-1',
+            b: '5',
+            c: 'Document',
+            d: [
+              {
+                a: '导航3-1-1-1',
+                b: '6',
+                c: 'Document',
+                d: [
+                  {
+                    a: '导航3-1-1-1-1',
+                    b: '7',
+                    c: 'Document',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+]
+```
+
+2. 通过jsx渲染页面递归实现无限层级菜单
+
+```tsx
+import { toLine } from "@/utils"
+import { defineComponent,PropType, render, useAttrs } from "vue"
+import { MenuItem } from "./types"
+import * as Icons from '@element-plus/icons-vue'
+import './styles/index.scss'
+
+export default defineComponent({
+	props: {
+	// 导航菜单的数据
+	data: {
+			type: Array as PropType<any[]>,
+			required: true,
+		},
+		// 默认选中的菜单
+		defaultActive: {
+			type: String,
+			default: "",
+		},
+		// 是否是路由模式
+		router: {
+			type: Boolean,
+			default: false,
+		},
+		// 键名 -> 菜单标题的键名
+		name: {
+			type: String,
+			default: "name",
+		},
+		// 键名 -> 菜单表示的键名
+		index: {
+			type: String,
+			default: "index",
+		},
+		// 键名 -> 菜单图标的键名
+		icon: {
+			type: String,
+			default: "icon",
+		},
+		// 键名 -> 子菜单的键名
+		children: {
+			type: String,
+			default: "children",
+		}
+	},
+	setup(props,ctx) {
+		/**
+		 * 封装渲染无限层级菜单的方法
+		 * @param data 需要渲染的数据
+		 * @returns jsx代码
+		 */
+		const renderMenu = (data: any[]) => {
+			return data.map((item: any) => {
+				// 每个菜单的图标
+				// `el-icon-${toLine(item[props.icon]!)}` 在 jsx 中不适用
+				// 加 ! 断言一定有值
+				// jsx 中 props 不可省略 vue 模板语言中可以省略
+				item.i = (Icons as any)[item[props.icon]!]
+				// 插槽是函数 处理sub-menu的插槽
+				const slots = {
+					title: () => {
+						return <>
+							<item.i style={{marginRight: 4}} />
+							<span>{item[props.name]}</span>
+						</>
+					}
+				}
+				// 递归渲染 children
+				if(item[props.children] && item[props.children].length) {
+					return (
+						// slots 上面定义的插槽
+						<el-sub-menu index={item[props.index]} v-slots={slots}>
+							{renderMenu(item[props.children])}
+						</el-sub-menu>
+					)
+				}
+				// 普通菜单
+				return (
+					<el-menu-item index={item[props.index]}>
+						<item.i style={{marginRight: 4}} />
+						<span>{item[props.name]}</span>
+					</el-menu-item>
+				)
+			})
+		}
+		const attrs = useAttrs()
+		// useAttrs() => 返回所有父组件传递来的没有在props声明的属性
+		return () => {
+			return (
+				<el-menu default-active={props.defaultActive}
+				 router={props.router}
+				 {...attrs}
+				>
+					 {renderMenu(props.data)}
+				</el-menu>
+			)
+		}
+	}
+})
+```
+
+3. 渲染页面
+
+```vue
+<template>
+  <div style="width: 200px">
+    <infiniteMenu :data="data2"
+                  name="a"
+                  index="b"
+                  icon="c"
+                  children="d" />
+  </div>
+</template>
+```
 
 ## 趋势标记
 
@@ -852,14 +1192,14 @@ const props = defineProps({
 </style>
 ```
 
-10. 动态进度条
+## 动态进度条
 
-11. 列表 
+## 列表 
 
-12. 表格
+## 表格
 
-13. 表单
+## 表单
 
-14. 弹窗表单
+## 弹窗表单
 
-15. 日历
+## 日历
